@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.appsdeveloperblog.app.ws.ui.model.request.UpdateUserDetailsRequestModel;
 import com.appsdeveloperblog.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
 
@@ -61,7 +64,7 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE, 
 					MediaType.APPLICATION_JSON_VALUE 
 					})
-	public ResponseEntity<UserRest> createUser(@RequestBody UserDetailsRequestModel userDetails) {
+	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
 		
 		UserRest returnValue = new UserRest();
 		returnValue.setEmail(userDetails.getEmail());
@@ -77,9 +80,24 @@ public class UserController {
 		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK) ;
 	}
 	
-	@PutMapping
-	public String updateUser() {
-		return "update user was called";
+	@PutMapping(path="/{userId}", consumes = { 
+			MediaType.APPLICATION_XML_VALUE, 
+			MediaType.APPLICATION_JSON_VALUE 
+			}, 
+			produces = { 
+					MediaType.APPLICATION_XML_VALUE, 
+					MediaType.APPLICATION_JSON_VALUE 
+					})
+	public UserRest updateUser(@PathVariable String userId, @RequestBody UserDetailsRequestModel userDetails ) {
+		
+		UserRest storedUserDetails = users.get(userId);
+		storedUserDetails.setFirstName(userDetails.getFirstName());
+		storedUserDetails.setLastName(userDetails.getLastName());
+		
+		users.put(userId, storedUserDetails);
+		
+		
+		return storedUserDetails;
 	}
 	
 	@DeleteMapping
