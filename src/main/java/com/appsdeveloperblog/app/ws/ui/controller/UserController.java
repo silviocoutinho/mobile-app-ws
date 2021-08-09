@@ -48,9 +48,9 @@ public class UserController {
 		
 		if(users.containsKey(userId))
 		{
-			return new ResponseEntity<UserRest>(users.get(userId), HttpStatus.OK) ;
+			return new ResponseEntity<>(users.get(userId), HttpStatus.OK) ;
 		} else {
-			return new ResponseEntity<UserRest>(HttpStatus.NO_CONTENT) ;
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT) ;
 		}
 		
 		
@@ -88,7 +88,7 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE, 
 					MediaType.APPLICATION_JSON_VALUE 
 					})
-	public UserRest updateUser(@PathVariable String userId, @RequestBody UserDetailsRequestModel userDetails ) {
+	public UserRest updateUser(@PathVariable String userId, @Valid @RequestBody UpdateUserDetailsRequestModel userDetails ) {
 		
 		UserRest storedUserDetails = users.get(userId);
 		storedUserDetails.setFirstName(userDetails.getFirstName());
